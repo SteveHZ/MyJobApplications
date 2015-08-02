@@ -1,0 +1,8 @@
+[% META title = 'My Job Applications - Edit Job' %]
+ 
+<h2>Edit job application</h2>
+
+[%# Render the HTML::FormHandler Form %]
+[% form.render %]
+ 
+<p><a href="[% c.uri_for(c.controller.action_for('showAll'), ['applied','desc']) %]">Show All</a></p> 

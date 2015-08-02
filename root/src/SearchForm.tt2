@@ -1,0 +1,48 @@
+
+[% META title = 'My Job Applications - Search Form' -%]
+
+<h2>My Job Applications</h2>
+
+<form method="post" action="[% c.uri_for('do_search') %]">
+
+	<h3><input type="radio" name="ToSearch" value="jobtitle" checked />Job Title</h3>
+	<h3><input type="radio" name="ToSearch" value="company" />Company</h3>
+	<h3><input type="radio" name="ToSearch" value="applied" />Applied</h3>
+	<h3><input type="radio" name="ToSearch" value="notes" />Notes</h3>
+
+	<select name="SearchOption">
+		<option value = "<">Less than</option>
+		<option value = "=">Equal to</option>
+		<option value = ">">Greater than</option>
+		<option value = "LIKE" selected>Similar to</option>
+	</select>
+
+	<p>
+		<label for="searchFor">Search for :</label>
+		<input type="text" name="SearchFor" />
+	</p>
+	
+	<p>
+		<label for="searchFor">Order by :</label>
+	</p>
+	<p>
+		<select name="OrderBy">
+			<option value = "jobtitle">Job Title</option>
+			<option value = "company">Company</option>
+			<option value = "applied" selected>Applied</option>
+		</select>
+	</p>	
+	
+	<select name="Order">
+		<option value = "asc">Ascending</option>
+		<option value = "desc" selected>Descending</option>
+	</select>
+
+	<input type="submit" value="Search" />
+</form>
+
+<p>
+	<a href="[% c.uri_for(c.controller.action_for('home')) %]" class="noline">
+		<input type="button" value="Go Back Home" />
+	</a>
+</p>
