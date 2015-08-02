@@ -1,0 +1,26 @@
+<table>
+	<tr>
+		<th>Job ID</th>
+		<th>Job Title</th>
+		<th>Company</th>
+		<th>Applied</th>
+		<th>Notes</th>
+	</tr>
+	
+	[% FOREACH row IN data %]
+		<tr>
+			<td class="ShowAll">[% row.jobno %]</td>
+			<td class="ShowAll"><a href = "[% row.website %]" target="_blank" >[% row.jobtitle %]</a></td>
+			<td class="ShowAll">[% row.company %]</td>
+			<td class="ShowAll">[% row.applied.dmy %]</td>
+			<td class="ShowAll">[% row.notes %]</td>
+			<td class="ShowAll"><a href="[% c.uri_for(c.controller.action_for('edit'),[row.jobno]) %]" >Edit</a></td>
+			<td class="ShowAll"><a href="[% c.uri_for(c.controller.action_for('delete'),[row.jobno]) %]" >Delete</a></td>
+		</tr>
+	[% END -%]
+	<tr><td colspan = 7>[% data.size %]
+						[% UNLESS data.size == 1 %]
+							applications [% ELSE %] application
+						[% END %] found.
+	</td></tr>
+</table>
