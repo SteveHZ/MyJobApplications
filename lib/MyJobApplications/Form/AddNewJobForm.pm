@@ -20,5 +20,13 @@ sub validate_applied {
 	}
 }
 
+sub validate_jobtitle {
+	my ($self, $field) = @_;
+
+	unless ($field->value =~ /\w/) {
+		$field->add_error ("Please provide a job title !!!");
+	}
+}
+
 __PACKAGE__->meta->make_immutable;
 1;

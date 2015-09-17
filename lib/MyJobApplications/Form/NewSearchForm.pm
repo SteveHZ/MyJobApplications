@@ -4,6 +4,7 @@ use HTML::FormHandler::Moose;
 extends 'HTML::FormHandler';
 use namespace::autoclean;
 
+#has '+item_class' => ( default =>'JobApplication' );
 has_field 'ToSearch' => ( type => 'Select', widget => 'RadioGroup', name => 'ToSearch', label => '', default => 'company');
 has_field 'SearchOption' => ( type => 'Select', label => '');
 has_field 'SearchFor' => ( type => 'Text', required => 1 );
@@ -23,7 +24,7 @@ sub options_ToSearch {
 
 sub options_SearchOption {
 	return (
-		"<" => 'Less than',
+		'<' => 'Less than',
 		'=' => 'Equal to',
 		'>' => 'Greater than',
 		'LIKE' => 'Similar to',
@@ -48,12 +49,11 @@ sub options_Order {
 sub validate_SearchFor {
 	my ($self, $field) = @_;
 	
-#	if ($self->field ('ToSearch')->value eq 'applied') {
+	if ($self->field ('SearchFor')->value eq 'Applied') {
 		unless ($field->value =~ /\d{4}-\d{2}-\d{2}/) {
 			$field->add_error ("Date should be in YYYY-MM-DD format !!!");
 		}
-#	}
-#	return 1;
+	}
 }
 
 __PACKAGE__->meta->make_immutable;

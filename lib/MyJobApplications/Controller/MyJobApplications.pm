@@ -16,6 +16,7 @@ MyJobApplications::Controller::MyJobApplications - Catalyst Controller
 
 Catalyst Controller.
 v1.0 10-14/06/15
+v1.1 14-17/09/15 (moose search form)
 
 =head1 METHODS
 
@@ -67,10 +68,11 @@ sub home :Chained('base') PathPart('home') Args(0) {
 sub showAll :Chained('base') PathPart('showAll') Args(2) {
 	my ($self, $c, $orderby, $order) = @_;
 
-	$c->stash ( template => 'ShowAll.tt2',
-				data =>	[ $c->stash->{resultset}
-							->order_by ($orderby, $order)
-				],
+	$c->stash (
+		template => 'ShowAll.tt2',
+		data =>	[ $c->stash->{resultset}
+					->order_by ($orderby, $order)
+		],
 	);
 }
 
@@ -80,27 +82,38 @@ sub showAll :Chained('base') PathPart('showAll') Args(2) {
 sub search :Chained('base') PathPart('search') Args(0) {
 	my ($self, $c) = @_;
 
-	$c->stash ( template => 'search_form.tt2',
-				form => MyJobApplications::Form::NewSearchForm->new,
-				object => $c->stash->{resultset},
+	$c->stash (
+		template => 'search_form.tt2',
+		form => MyJobApplications::Form::NewSearchForm->new,
+#		object => $c->stash->{resultset},
 	);
+
 	return $self->do_searchform ($c);
 }
 
+=head2 do_searchform
+private sub called from search
+=cut
+
 sub do_searchform {
     my ($self, $c) = @_;
- 
     my $form = $c->stash->{form};
 	
-	$form->process(	item => $c->stash->{object},
-					params => $c->req->params,
-					action => $c->uri_for ($self->action_for ('new_do_search')),
+	$form->process (
+		item => $c->stash->{resultset},#{object},
+#		params => $c->req->params,
+		action => $c->uri_for ($self->action_for ('do_search')),
 	);
+
     return unless $form->validated;
 
 }
 
-sub new_do_search :Chained('base') PathPart('new_do_search') Args(0) {
+=head2 do_search
+called from do_searchform form->process->{action}
+=cut
+
+sub do_search :Chained('base') PathPart('do_search') Args(0) {
 	my ($self, $c) = @_;
 	
 	my $toSearch = $c->request->params->{ToSearch};
@@ -109,11 +122,12 @@ sub new_do_search :Chained('base') PathPart('new_do_search') Args(0) {
 	my $orderBy = $c->request->params->{OrderBy};
 	my $order = $c->request->params->{Order};
 
-	$c->stash (	template => 'SearchResults.tt2',
-				data => [ $c->stash->{resultset}
-								->search_for ($toSearch, $searchOption, $searchFor)
-								->order_by ($orderBy, $order)
-				],
+	$c->stash (
+		template => 'SearchResults.tt2',
+		data => [ $c->stash->{resultset}
+					->search_for ($toSearch, $searchOption, $searchFor)
+					->order_by ($orderBy, $order)
+		],
 	);
 }	
 
@@ -127,9 +141,9 @@ sub delete :Chained('object') PathPart('delete') Args(0) {
 	my $id = $c->stash->{id};
 	$c->stash->{object}->delete;
 	
-	$c->response->redirect( $c->uri_for (
-							$self->action_for ('showAll'), [qw /applied desc/],
-							{ mid => $c->set_status_msg ("Deleted Job ID $id") }
+	$c->response->redirect(
+		$c->uri_for ( $self->action_for ('showAll'), [qw /applied desc/],
+			{ mid => $c->set_status_msg ("Deleted Job ID $id") }
 	));
 }
 
@@ -176,8 +190,7 @@ sub form {
 	);
     return unless $form->validated;
 
-    $c->response->redirect ($c->uri_for (
-							$self->action_for ('showAll'), [qw /applied desc/],
+    $c->response->redirect	($c->uri_for ( $self->action_for ('showAll'), [qw /applied desc/],
 							{ mid => $c->set_status_msg ($msg) }
 	));
 }
