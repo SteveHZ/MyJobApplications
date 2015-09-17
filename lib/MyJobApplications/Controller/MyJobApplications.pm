@@ -4,6 +4,7 @@ use namespace::autoclean;
 use DateTime;
 
 use MyJobApplications::Form::AddNewJobForm;
+use MyJobApplications::Form::NewSearchForm;
 
 BEGIN { extends 'Catalyst::Controller'; }
 
@@ -22,8 +23,6 @@ v1.0 10-14/06/15
 
 =head2 index
 =cut
-
-my $defaultWebsite = 'http://localhost:3000/myjobapplications/home';
 
 sub index :Path Args(0) {
     my ( $self, $c ) = @_;
@@ -81,14 +80,27 @@ sub showAll :Chained('base') PathPart('showAll') Args(2) {
 sub search :Chained('base') PathPart('search') Args(0) {
 	my ($self, $c) = @_;
 
-	$c->stash ( template => 'SearchForm.tt2');
+	$c->stash ( template => 'search_form.tt2',
+				form => MyJobApplications::Form::NewSearchForm->new,
+				object => $c->stash->{resultset},
+	);
+	return $self->do_searchform ($c);
 }
 
-=head2 do_search
-called from SearchForm.tt2
-=cut
+sub do_searchform {
+    my ($self, $c) = @_;
+ 
+    my $form = $c->stash->{form};
+	
+	$form->process(	item => $c->stash->{object},
+					params => $c->req->params,
+					action => $c->uri_for ($self->action_for ('new_do_search')),
+	);
+    return unless $form->validated;
 
-sub do_search :Chained('base') PathPart('do_search') Args(0) {
+}
+
+sub new_do_search :Chained('base') PathPart('new_do_search') Args(0) {
 	my ($self, $c) = @_;
 	
 	my $toSearch = $c->request->params->{ToSearch};
@@ -170,7 +182,34 @@ sub form {
 	));
 }
 
+=head1
+sub search :Chained('base') PathPart('search') Args(0) {
+	my ($self, $c) = @_;
 
+	$c->stash ( template => 'SearchForm.tt2');
+}
+
+=head2 do_search
+called from SearchForm.tt2
+#=cut
+
+sub do_search :Chained('base') PathPart('do_search') Args(0) {
+	my ($self, $c) = @_;
+	
+	my $toSearch = $c->request->params->{ToSearch};
+	my $searchOption = $c->request->params->{SearchOption};
+	my $searchFor = $c->request->params->{SearchFor};
+	my $orderBy = $c->request->params->{OrderBy};
+	my $order = $c->request->params->{Order};
+
+	$c->stash (	template => 'SearchResults.tt2',
+				data => [ $c->stash->{resultset}
+								->search_for ($toSearch, $searchOption, $searchFor)
+								->order_by ($orderBy, $order)
+				],
+	);
+}	
+=cut
 =encoding utf8
 
 =head1 AUTHOR

@@ -16,7 +16,7 @@ sub search_for {
 		});
 	} else {
 		return $self->search ({
-			$field => { $cmp => $data }
+			$field => { $cmp => uc ($data) }
 		});
 	}
 }
