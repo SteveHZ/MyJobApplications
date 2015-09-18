@@ -85,7 +85,6 @@ sub search :Chained('base') PathPart('search') Args(0) {
 	$c->stash (
 		template => 'search_form.tt2',
 		form => MyJobApplications::Form::NewSearchForm->new,
-#		object => $c->stash->{resultset},
 	);
 
 	return $self->do_searchform ($c);
@@ -100,8 +99,6 @@ sub do_searchform {
     my $form = $c->stash->{form};
 	
 	$form->process (
-		item => $c->stash->{resultset},#{object},
-#		params => $c->req->params,
 		action => $c->uri_for ($self->action_for ('do_search')),
 	);
 
