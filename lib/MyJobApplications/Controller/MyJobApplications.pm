@@ -1,7 +1,6 @@
 package MyJobApplications::Controller::MyJobApplications;
 use Moose;
 use namespace::autoclean;
-use DateTime;
 
 use MyJobApplications::Form::AddNewJobForm;
 use MyJobApplications::Form::NewSearchForm;
@@ -16,7 +15,7 @@ MyJobApplications::Controller::MyJobApplications - Catalyst Controller
 
 Catalyst Controller.
 v1.0 10-14/06/15
-v1.1 14-17/09/15 (moose search form)
+v1.1 14-22/09/15 (moose search form)
 
 =head1 METHODS
 
@@ -46,8 +45,9 @@ sub base :Chained('/') PathPart('myjobapplications') CaptureArgs(0) {
 sub object :Chained('base') :PathPart('') :CaptureArgs(1) {
 	my ($self, $c, $id) = @_;
 	
-	$c->stash ( object => $c->stash->{resultset}->find ($id),
-				id => $id,
+	$c->stash (
+		object => $c->stash->{resultset}->find ($id),
+		id => $id,
 	);
 	
 	die "Object $id not found !" if ! $c->stash->{object};
@@ -76,41 +76,36 @@ sub showAll :Chained('base') PathPart('showAll') Args(2) {
 	);
 }
 
-=head2 search
-=cut
-
 sub search :Chained('base') PathPart('search') Args(0) {
 	my ($self, $c) = @_;
 
+	my $form = MyJobApplications::Form::NewSearchForm->new;
 	$c->stash (
 		template => 'search_form.tt2',
-		form => MyJobApplications::Form::NewSearchForm->new,
+		form => $form,
 	);
-
-	return $self->do_searchform ($c);
+	
+	return $self->search_form ($c);
 }
 
-=head2 do_searchform
-private sub called from search
-=cut
-
-sub do_searchform {
-    my ($self, $c) = @_;
+sub search_form {
+    my ($self, $c ) = @_;
     my $form = $c->stash->{form};
-	
+
 	$form->process (
-		action => $c->uri_for ($self->action_for ('do_search')),
+		item => $c->stash->{resultset},
+		params => $c->request->params,
 	);
+	return unless $form->validated;
 
-    return unless $form->validated;
-
+	$self->do_search ($c);
 }
 
 =head2 do_search
-called from do_searchform form->process->{action}
+called from search
 =cut
 
-sub do_search :Chained('base') PathPart('do_search') Args(0) {
+sub do_search {
 	my ($self, $c) = @_;
 	
 	my $toSearch = $c->request->params->{ToSearch};
@@ -151,9 +146,10 @@ Use HTML::FormHandler to add a new job application
 sub newJob :Chained('base') PathPart('newJob') Args(0) {
     my ($self, $c ) = @_;
  
-	$c->stash ( template => 'form.tt2',
-				form => MyJobApplications::Form::AddNewJobForm->new,
-				object => $c->stash->{resultset}->new_result({}),
+	$c->stash (
+		template => 'form.tt2',
+		form => MyJobApplications::Form::AddNewJobForm->new,
+		object => $c->stash->{resultset}->new_result({}),
 	);
 
 	return $self->form ($c, "New job added !!!");
@@ -166,8 +162,9 @@ Edit an existing entry with HTML::FormHandler
 sub edit :Chained('object') PathPart('edit') Args(0) {
     my ($self, $c) = @_;
  
-	$c->stash (	template => 'edit_form.tt2',
-				form => MyJobApplications::Form::AddNewJobForm->new,
+	$c->stash (
+		template => 'edit_form.tt2',
+		form => MyJobApplications::Form::AddNewJobForm->new,
 	);
 
     return $self->form ($c, "Job edited !!!");
@@ -182,8 +179,9 @@ sub form {
  
     my $form = $c->stash->{form};
 	
-	$form->process(	item => $c->stash->{object},
-					params => $c->req->params,
+	$form->process(	
+		item => $c->stash->{object},
+		params => $c->req->params,
 	);
     return unless $form->validated;
 
@@ -192,34 +190,6 @@ sub form {
 	));
 }
 
-=head1
-sub search :Chained('base') PathPart('search') Args(0) {
-	my ($self, $c) = @_;
-
-	$c->stash ( template => 'SearchForm.tt2');
-}
-
-=head2 do_search
-called from SearchForm.tt2
-#=cut
-
-sub do_search :Chained('base') PathPart('do_search') Args(0) {
-	my ($self, $c) = @_;
-	
-	my $toSearch = $c->request->params->{ToSearch};
-	my $searchOption = $c->request->params->{SearchOption};
-	my $searchFor = $c->request->params->{SearchFor};
-	my $orderBy = $c->request->params->{OrderBy};
-	my $order = $c->request->params->{Order};
-
-	$c->stash (	template => 'SearchResults.tt2',
-				data => [ $c->stash->{resultset}
-								->search_for ($toSearch, $searchOption, $searchFor)
-								->order_by ($orderBy, $order)
-				],
-	);
-}	
-=cut
 =encoding utf8
 
 =head1 AUTHOR

@@ -4,14 +4,25 @@ use HTML::FormHandler::Moose;
 extends 'HTML::FormHandler';
 use namespace::autoclean;
 
-#has '+item_class' => ( default =>'JobApplication' );
-has_field 'ToSearch' => ( type => 'Select', widget => 'RadioGroup', name => 'ToSearch', label => '', default => 'company');
-has_field 'SearchOption' => ( type => 'Select', label => '');
-has_field 'SearchFor' => ( type => 'Text', required => 1 );
-has_field 'OrderBy' => ( type => 'Select', required => 1 );
-has_field 'Order' => ( type => 'Select', required => 1 );
+has_field 'ToSearch' => ( type => 'Select', widget => 'RadioGroup', name => 'ToSearch', label => '', default => 'jobtitle',);
+has_field 'SearchOption' => ( type => 'Select', label => '',);
+has_field 'SearchFor' => ( type => 'Text', required => 1,
+#	apply => [ {transform => sub { return uc($_[0]) }} ]
+);
+has_field 'OrderBy' => ( type => 'Select', );
+has_field 'Order' => ( type => 'Select', );
 
 has_field 'Submit' => ( type => 'Submit', value => 'Submit' );
+
+sub validate_SearchFor {
+	my ($self, $field) = @_;
+	
+	if ($self->field ('ToSearch')->value eq 'applied') {
+		unless ($field->value =~ /\d{4}-\d{2}-\d{2}/) {
+			$field->add_error ("Please use YYYY-MM-DD format for dates");
+		}
+	}
+}
 
 sub options_ToSearch {
 	return (
@@ -44,16 +55,6 @@ sub options_Order {
 		'asc' => 'Ascending',
 		'desc' => 'Descending',
 	);
-}
-
-sub validate_SearchFor {
-	my ($self, $field) = @_;
-	
-	if ($self->field ('SearchFor')->value eq 'Applied') {
-		unless ($field->value =~ /\d{4}-\d{2}-\d{2}/) {
-			$field->add_error ("Date should be in YYYY-MM-DD format !!!");
-		}
-	}
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -1,19 +1,19 @@
-[%# USE Dumper %]
-[%# Dumper.dump(job) %]
 
 [% META title = 'My Job Applications - Edit' -%]
 
 <h2> My Job Applications - Edit</h2>
 
 <form method="post" action="[% c.uri_for('old_update',id) %]">
-<table>
-  <tr><td>Job Title:</td><td><input type="text" name="jobtitle" value="[% job.jobtitle %]"></td></tr>
-  <tr><td>Company:</td><td><input type="text" name="company" value="[% job.company %]"></td></tr>
-  <tr><td>Applied:</td><td><input type="text" name="applied" value="[% job.applied.date %]" title="Use format YYYY-MM-DD or leave blank for todays date"></td></tr>
-  <tr><td>Website:</td><td><input type="text" name="website" value="[% job.website %]"></td></tr>
-  <tr><td>Notes:</td><td><input type="text" name="notes" value="[% job.notes %]"></td></tr>
-</table>
-<input type="submit" name="Submit" value="Edit">
+	<table>
+		<tr><td>Job Title:</td><td><input type="text" name="jobtitle" value="[% job.jobtitle %]"></td></tr>
+		<tr><td>Company:</td><td><input type="text" name="company" value="[% job.company %]"></td></tr>
+		<tr><td>Applied:</td><td><input type="text" name="applied" value="[% job.applied.date %]" 
+			title="Use format YYYY-MM-DD or leave blank for todays date">
+		</td></tr>
+		<tr><td>Website:</td><td><input type="text" name="website" value="[% job.website %]"></td></tr>
+		<tr><td>Notes:</td><td><input type="text" name="notes" value="[% job.notes %]"></td></tr>
+	</table>
+	<input type="submit" name="Submit" value="Edit">
 </form>
 
 <p><a href="[% c.uri_for(c.controller.action_for('showAll')) %]">Show All</a></p>

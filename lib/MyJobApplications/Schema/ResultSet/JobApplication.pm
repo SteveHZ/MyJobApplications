@@ -16,7 +16,8 @@ sub search_for {
 		});
 	} else {
 		return $self->search ({
-			$field => { $cmp => uc ($data) }
+			$field => { $cmp => $data }
+#			"UPPER($field)" => { $cmp => $data }
 		});
 	}
 }
@@ -30,6 +31,7 @@ sub order_by {
 	return $self->search (
 	{},{
 		order_by => { -$order => $orderby },
+#		order_by => { -$order => "UPPER($orderby)" },
 	});
 }
 

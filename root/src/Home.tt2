@@ -22,14 +22,17 @@
 	</a>
 </div>
 
-Order by :
-<select name="OrderBy" id="orderby">
-	<option value="1">Job Title</option>
-	<option value="2">Company</option>
-	<option value="3" selected>Applied</option>
-</select>
-<br/>
-<select name="AscDesc" id="ascdesc">
-	<option value="1">Ascending</option>
-	<option value="2" selected>Descending</option>
-</select>
+<div>
+	<label for "OrderBy">Order by :</label>
+	<br/>
+	<select name="OrderBy" id="orderby">
+		<option value="1">Job Title</option>
+		<option value="2">Company</option>
+		<option value="3" selected>Applied</option>
+	</select>
+	<br/>
+	<select name="AscDesc" id="ascdesc">
+		<option value="1">Ascending</option>
+		<option value="2" selected>Descending</option>
+	</select>
+</div>
