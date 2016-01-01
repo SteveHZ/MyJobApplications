@@ -30,11 +30,11 @@ extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime");
 
-=head1 TABLE: C<JobApplications>
+=head1 TABLE: C<jobapplications>
 
 =cut
 
-__PACKAGE__->table("JobApplications");
+__PACKAGE__->table("jobapplications");
 
 =head1 ACCESSORS
 
@@ -59,6 +59,7 @@ __PACKAGE__->table("JobApplications");
 =head2 applied
 
   data_type: 'date'
+  datetime_undef_if_invalid: 1
   is_nullable: 1
 
 =head2 website
@@ -82,7 +83,7 @@ __PACKAGE__->add_columns(
   "company",
   { data_type => "varchar", is_nullable => 1, size => 64 },
   "applied",
-  { data_type => "date", is_nullable => 1 },
+  { data_type => "date", datetime_undef_if_invalid => 1, is_nullable => 1 },
   "website",
   { data_type => "text", is_nullable => 1 },
   "notes",
@@ -102,20 +103,9 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("jobno");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-06-07 12:46:24
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:clieX9QlZZd1ojso2g4BAA
+# Created by DBIx::Class::Schema::Loader v0.07042 @ 2015-11-26 19:44:01
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:70lT5y0WSQNsj533KKKG5w
 
-# use job.applied.dmy() instead
-
-=head2
-sub applied_dmy {
-	my $self = shift;
-#	my ($self, $op) = @_;
-
-	my ($y, $m, $d) = split (/-/, $self->applied->ymd);
-	return sprintf ("%s-%s-%s", $d, $m, $y); #	return sprintf ("%s%s%s%s%s", $d, $op, $m, $op, $y);
-}
-=cut
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

@@ -7,9 +7,9 @@ __PACKAGE__->config(
     schema_class => 'MyJobApplications::Schema',
     
     connect_info => {
-        dsn => 'dbi:SQLite:MyJobApplications.db',
-        user => '',
-        password => '',
+        dsn => 'dbi:mysql:MyJobApplications',
+        user => 'root',
+        password => 'zappa',
     }
 );
 

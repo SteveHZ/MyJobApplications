@@ -6,12 +6,12 @@
 [% INCLUDE "results_table.tt2" %]
 
 <p>
-	<a href="[% c.uri_for(c.controller.action_for('search')) %]" class="noline">
+	<a href="[% c.uri(".search") %]" class="noline">
 		<input type="button" value="Search Again" />
 	</a>
 </p>
 <p>
-	<a href="[% c.uri_for(c.controller.action_for('home')) %]" class="noline">
+	<a href="[% c.uri(".home") %]" class="noline">
 		<input type="button" value="Go Back Home" />
 	</a>
 </p>

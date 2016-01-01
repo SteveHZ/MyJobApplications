@@ -1,6 +1,6 @@
 <table>
 	<tr>
-		<th>Job ID</th>
+<!--		<th>Job ID</th>-->
 		<th>Job Title</th>
 		<th>Company</th>
 		<th>Applied</th>
@@ -9,7 +9,7 @@
 	
 	[% FOREACH row IN data %]
 		<tr>
-			<td class="ShowAll">[% row.jobno %]</td>
+<!--			<td class="ShowAll">[% row.jobno %]</td>-->
 			<td class="ShowAll"><a href = "[% row.website %]" target="_blank" >[% row.jobtitle %]</a></td>
 			<td class="ShowAll">[% row.company %]</td>
 			<td class="ShowAll">[% row.applied.dmy %]</td>

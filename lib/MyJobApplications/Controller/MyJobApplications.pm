@@ -16,6 +16,7 @@ MyJobApplications::Controller::MyJobApplications - Catalyst Controller
 Catalyst Controller.
 v1.0 10-14/06/15
 v1.1 14-22/09/15 (moose search form)
+v1.11 08/12/15 (using URI plugin)
 
 =head1 METHODS
 
@@ -26,7 +27,9 @@ v1.1 14-22/09/15 (moose search form)
 
 sub index :Path Args(0) {
     my ( $self, $c ) = @_;
-	$c->response->redirect ($c->uri_for ( $self->action_for ('home')));
+	
+	$c->response->redirect ($c->uri("MyJobApplications.home"));
+#	$c->response->redirect ($c->uri_for ( $self->action_for ('home')));
 }
 
 =head2 base
